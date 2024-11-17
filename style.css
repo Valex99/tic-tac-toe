@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: monospace;
+
+  border: 1px solid red;
+}
+
+.nav-bar {
+    background-color: black;
+    width: 100%;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    color: white;
+    font-size: 40px;
+}
+
+.logo {
+    height: 50px;
+    filter: invert(100%);
+}
+
+.nav-bar p {
+    margin-left: 20px;
+}
+
+/**/
+.gameboard {
+    height: calc(100vh - 75px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.select-marker-div {
+    height: 30%;
+    width: 40%;
+    background-color: aquamarine;
+
+    /* Manipulating visibility -> hidden - none */
+}

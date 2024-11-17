@@ -24,9 +24,17 @@ const Game = (function () {
 
       if (checkWinner()) {
         console.log(`Winner is: ${currentPlayer.name}`);
+      } else if (checkTie()) {
+        console.log(`No winner, tie game!`);
       } else {
         switchPlayer();
       }
+      // This logs state of the board after each turn
+      console.log(`Current Board State:`);
+      board.forEach((row, i) =>
+        console.log(row.map((cell) => cell.getValue()).join(" | "))
+      );
+
       return true; // Marker added successfully
     }
     console.log("Cell is already occupied. Try a different move.");
@@ -44,13 +52,15 @@ const Game = (function () {
       }
     }
     currentPlayer = player1; // Reset to the first player
-    console.log("Board has been reset. Player 1 starts.");
+    console.log(
+      "The game has been reset. The board is empty. Player 1 starts!"
+    );
   };
 
   // Switch between players
   const switchPlayer = () => {
     currentPlayer = currentPlayer === player1 ? player2 : player1;
-    console.log(`${currentPlayer.name}'s turn.`);
+    console.log(`${currentPlayer.name} (${currentPlayer.marker})'s turn.`);
   };
 
   // Check for a winner
@@ -78,7 +88,14 @@ const Game = (function () {
         return true; // Winning combination found
       }
     }
+
     return false; // No winner yet
+  };
+
+  // First version was nested for loop -> This is much cleaner
+  // Board is 2d array, row is 1D array. For every row in a bard, for every cell in a row compare value
+  const checkTie = () => {
+    return board.every((row) => row.every((cell) => cell.getValue() !== 0));
   };
 
   // Expose public methods
@@ -100,6 +117,7 @@ function Cell() {
     getValue,
   };
 }
+
 // EXPERIMENT
 
 Game.addMarker(0, 0); // Player 1 places an 'X'
@@ -107,11 +125,16 @@ Game.addMarker(0, 1); // Player 2 places an 'O'
 Game.addMarker(0, 2); // Player 1 places an 'X'
 Game.addMarker(1, 0); // Player 2 places an 'O'
 Game.addMarker(1, 1); // Player 1 places an 'X'
-Game.addMarker(1, 2); // Player 2 places an 'O'
-Game.addMarker(2, 0); // Player 1 places an 'X' and wins
+Game.addMarker(2, 0); // Player 2 places an 'O'
+Game.addMarker(1, 2); // Player 1 places an 'X'
+//Game.addMarker(2, 1); // Player 2 places an 'X'
+//Game.addMarker(2, 2); // Player 2 places an 'O'
 
-console.log("");
+// If cell is skipped - for example marker is added in field j = 1 and j = 0 has a default value of 0
+// Then marker is wrapped in a string, not X but 'X'
+
 // SHOW BOARD IN CONSOLE ONCE MOVES ARE MADE
+
 console.log(
   Game.getCellValue(0, 0),
   Game.getCellValue(0, 1),
