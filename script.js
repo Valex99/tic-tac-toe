@@ -8,13 +8,9 @@ const Game = (function () {
   const player2 = { name: "Player 2", marker: "O" };
   let currentPlayer = player1;
 
-  // Initialize the board
-  for (let i = 0; i < rows; i++) {
-    board[i] = [];
-    for (let j = 0; j < columns; j++) {
-      board[i].push(Cell());
-    }
-  }
+  // Expose getter methods for rows and columns
+  const getRows = () => rows;
+  const getColumns = () => columns;
 
   // Function to add a marker to the board
   const addMarker = (row, col) => {
@@ -27,8 +23,9 @@ const Game = (function () {
       } else if (checkTie()) {
         console.log(`No winner, tie game!`);
       } else {
-        //switchPlayer();
+        switchPlayer();
       }
+
       // This logs state of the board after each turn
       console.log(`Current Board State:`);
       board.forEach((row, i) =>
@@ -98,50 +95,8 @@ const Game = (function () {
     return board.every((row) => row.every((cell) => cell.getValue() !== 0));
   };
 
-  // Add UI logic
-  let selectedMarker;
-  const markerButton = document.querySelectorAll(".marker-button");
-  const chooseMarkerDiv = document.querySelector(".select-marker-div");
-  const gameboardDiv = document.querySelector(".gameboard-div");
-  const allcells = document.querySelectorAll(".cell");
-  //
-  const xButton = document.querySelector(".x");
-  const oButton = document.querySelector(".o");
-  //
-  xButton.addEventListener("click", () => {
-    selectedMarker = "X";
-    //console.log("SELECTED MARKER:", selectedMarker);
-  });
-
-  oButton.addEventListener("click", () => {
-    selectedMarker = "O";
-    //console.log("SELECTED MARKER:", selectedMarker);
-  });
-
-  // Add evenetListeners to each cell
-  allcells.forEach((cell) => {
-    cell.addEventListener("click", () => {
-      // On click, a given cell should:
-      // 1. Return it's location
-      // 2. Change it's text context
-      cell.textContent = currentPlayer.marker;
-      cell.style.pointerEvents = "none";
-      //cell.style.cursor = "not-allowed";
-      cell.style.backgroundColor = "#991938"
-      switchPlayer();
-    });
-  });
-
-  // Add event listeners for marker selection
-  markerButton.forEach((element) => {
-    element.addEventListener("click", () => {
-      chooseMarkerDiv.style.display = "none"; // Hide marker selection
-      gameboardDiv.style.display = "grid"; // Show gameboard
-    });
-  });
-  // Click on each button hides makers and displays gameboard
   // Expose public methods
-  return { addMarker, getCellValue, resetBoard };
+  return { addMarker, getCellValue, resetBoard, getRows, getColumns };
 })();
 
 // Cell Factory Function
@@ -162,8 +117,73 @@ function Cell() {
   };
 }
 
-// EXPERIMENT
+const UI = (function () {
+  const markerButton = document.querySelectorAll(".marker-button");
+  const chooseMarkerDiv = document.querySelector(".select-marker-div");
+  const gameboardDiv = document.querySelector(".gameboard-div");
 
+  const grid = () => {
+    // Pass rows and columns from Game module to UI module
+    const rows = Game.getRows();
+    const columns = Game.getColumns();
+    gameboardDiv.innerHTML = "";
+
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < columns; j++) {
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
+        cell.setAttribute("data-row", i);
+        cell.setAttribute("data-col", j);
+        gameboardDiv.appendChild(cell);
+
+        // Add event listener to each cell
+        // e.target is used to retrieve custom data attributes (data-row and data-col) from an HTML element that triggered an event.
+        // e.target refers to the DOM element that triggered the event
+        cell.addEventListener("click", (e) => {
+          const row = e.target.getAttribute("data-row");
+          const col = e.target.getAttribute("data-col");
+
+          console.log(`Clicked cell at row: ${row}, col: ${col}`);
+
+          // Now add marker function neds to be called
+        });
+      }
+    }
+  };
+
+  markerButton.forEach((element) => {
+    element.addEventListener("click", () => {
+      chooseMarkerDiv.style.display = "none";
+      gameboardDiv.style.display = "grid";
+    });
+  });
+
+  // Which marker player selected
+  let selectedMarker;
+
+  const xButton = document.querySelector(".x");
+  const oButton = document.querySelector(".o");
+  //
+  xButton.addEventListener("click", () => {
+    selectedMarker = "X";
+    console.log("SELECTED MARKER:", selectedMarker);
+  });
+
+  oButton.addEventListener("click", () => {
+    selectedMarker = "O";
+    console.log("SELECTED MARKER:", selectedMarker);
+  });
+
+  return { renderGrid: grid };
+})();
+
+// DOMContentLoaded ensures the DOM is fully loaded before executing
+document.addEventListener("DOMContentLoaded", () => {
+  UI.renderGrid();
+  // Start game or any other logic here
+});
+// EXPERIMENT
+/*
 Game.addMarker(0, 0); // Player 1 places an 'X'
 Game.addMarker(0, 1); // Player 2 places an 'O'
 Game.addMarker(0, 2); // Player 1 places an 'X'
@@ -173,26 +193,4 @@ Game.addMarker(2, 0); // Player 2 places an 'O'
 Game.addMarker(1, 2); // Player 1 places an 'X'
 //Game.addMarker(2, 1); // Player 2 places an 'X'
 //Game.addMarker(2, 2); // Player 2 places an 'O'
-
-// If cell is skipped - for example marker is added in field j = 1 and j = 0 has a default value of 0
-// Then marker is wrapped in a string, not X but 'X'
-
-// SHOW BOARD IN CONSOLE ONCE MOVES ARE MADE
-
-console.log(
-  Game.getCellValue(0, 0),
-  Game.getCellValue(0, 1),
-  Game.getCellValue(0, 2)
-);
-
-console.log(
-  Game.getCellValue(1, 0),
-  Game.getCellValue(1, 1),
-  Game.getCellValue(1, 2)
-);
-
-console.log(
-  Game.getCellValue(2, 0),
-  Game.getCellValue(2, 1),
-  Game.getCellValue(2, 2)
-);
+*/
