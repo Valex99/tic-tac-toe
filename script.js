@@ -24,6 +24,14 @@ const Game = (function () {
     // PLayer 1 always starts
     currentPlayer = player1;
 
+    // Initialize the board with Cell objects
+    for (let i = 0; i < rows; i++) {
+      board[i] = []; // Create a sub-array for each row
+      for (let j = 0; j < columns; j++) {
+        board[i][j] = Cell(); // Add a Cell object to each position
+      }
+    }
+
     console.log(
       `Game initialized. ${currentPlayer.name} (${currentPlayer.marker}) starts!`
     );
@@ -44,14 +52,8 @@ const Game = (function () {
       } else if (checkTie()) {
         console.log(`No winner, tie game!`);
       } else {
-        //switchPlayer();
+        switchPlayer();
       }
-
-      // This logs state of the board after each turn
-      console.log(`Current Board State:`);
-      board.forEach((row, i) =>
-        console.log(row.map((cell) => cell.getValue()).join(" | "))
-      );
 
       return true; // Marker added successfully
     }
@@ -168,14 +170,18 @@ const UI = (function () {
         // e.target is used to retrieve custom data attributes (data-row and data-col) from an HTML element that triggered an event.
         // e.target refers to the DOM element that triggered the event
         cell.addEventListener("click", (e) => {
-          const row = e.target.getAttribute("data-row");
-          const col = e.target.getAttribute("data-col");
+          const row = parseInt(e.target.getAttribute("data-row"));
+          const col = parseInt(e.target.getAttribute("data-col"));
 
           console.log(`Clicked cell at row: ${row}, col: ${col}`);
 
           // Now add marker function neds to be called
+          const success = Game.addMarker(row, col);
 
-          
+          if (success) {
+            const currentPlayerMarker = Game.getCellValue(row, col); // Place the marker
+            e.target.textContent = currentPlayerMarker; // Update the cell's text
+          }
         });
       }
     }
