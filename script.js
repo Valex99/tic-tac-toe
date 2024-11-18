@@ -27,7 +27,7 @@ const Game = (function () {
       } else if (checkTie()) {
         console.log(`No winner, tie game!`);
       } else {
-        switchPlayer();
+        //switchPlayer();
       }
       // This logs state of the board after each turn
       console.log(`Current Board State:`);
@@ -98,11 +98,55 @@ const Game = (function () {
     return board.every((row) => row.every((cell) => cell.getValue() !== 0));
   };
 
+  // Add UI logic
+  let selectedMarker;
+  const markerButton = document.querySelectorAll(".marker-button");
+  const chooseMarkerDiv = document.querySelector(".select-marker-div");
+  const gameboardDiv = document.querySelector(".gameboard-div");
+  const allcells = document.querySelectorAll(".cell");
+  //
+  const xButton = document.querySelector(".x");
+  const oButton = document.querySelector(".o");
+  //
+  xButton.addEventListener("click", () => {
+    selectedMarker = "X";
+    //console.log("SELECTED MARKER:", selectedMarker);
+  });
+
+  oButton.addEventListener("click", () => {
+    selectedMarker = "O";
+    //console.log("SELECTED MARKER:", selectedMarker);
+  });
+
+  // Add evenetListeners to each cell
+  allcells.forEach((cell) => {
+    cell.addEventListener("click", () => {
+      // On click, a given cell should:
+      // 1. Return it's location
+      // 2. Change it's text context
+      cell.textContent = currentPlayer.marker;
+      cell.style.pointerEvents = "none";
+      //cell.style.cursor = "not-allowed";
+      cell.style.backgroundColor = "#991938"
+      switchPlayer();
+    });
+  });
+
+  // Add event listeners for marker selection
+  markerButton.forEach((element) => {
+    element.addEventListener("click", () => {
+      chooseMarkerDiv.style.display = "none"; // Hide marker selection
+      gameboardDiv.style.display = "grid"; // Show gameboard
+    });
+  });
+  // Click on each button hides makers and displays gameboard
   // Expose public methods
   return { addMarker, getCellValue, resetBoard };
 })();
 
 // Cell Factory Function
+// Cell function should not interact with the DOM
+// It is encapsulated private function
 function Cell() {
   let value = 0;
 
