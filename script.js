@@ -4,9 +4,30 @@ const Game = (function () {
   const rows = 3;
   const columns = 3;
   const board = [];
-  const player1 = { name: "Player 1", marker: "X" };
-  const player2 = { name: "Player 2", marker: "O" };
-  let currentPlayer = player1;
+  let player1 = null; // Will be assigned dynamically
+  let player2 = null;
+  let currentPlayer = null;
+
+  // Initialize the game with the selected marker
+  const initializeGame = (humanMarker) => {
+    const computerMarker = humanMarker === "X" ? "O" : "X";
+
+    player1 =
+      humanMarker === "X"
+        ? { name: "Human", marker: "X" }
+        : { name: "Computer", marker: "O" };
+    player2 =
+      humanMarker === "O"
+        ? { name: "Human", marker: "X" }
+        : { name: "Computer", marker: "O" };
+
+    // PLayer 1 always starts
+    currentPlayer = player1;
+
+    console.log(
+      `Game initialized. ${currentPlayer.name} (${currentPlayer.marker}) starts!`
+    );
+  };
 
   // Expose getter methods for rows and columns
   const getRows = () => rows;
@@ -23,7 +44,7 @@ const Game = (function () {
       } else if (checkTie()) {
         console.log(`No winner, tie game!`);
       } else {
-        switchPlayer();
+        //switchPlayer();
       }
 
       // This logs state of the board after each turn
@@ -96,7 +117,14 @@ const Game = (function () {
   };
 
   // Expose public methods
-  return { addMarker, getCellValue, resetBoard, getRows, getColumns };
+  return {
+    initializeGame,
+    addMarker,
+    getCellValue,
+    resetBoard,
+    getRows,
+    getColumns,
+  };
 })();
 
 // Cell Factory Function
@@ -146,6 +174,8 @@ const UI = (function () {
           console.log(`Clicked cell at row: ${row}, col: ${col}`);
 
           // Now add marker function neds to be called
+
+          
         });
       }
     }
@@ -167,11 +197,13 @@ const UI = (function () {
   xButton.addEventListener("click", () => {
     selectedMarker = "X";
     console.log("SELECTED MARKER:", selectedMarker);
+    Game.initializeGame(selectedMarker);
   });
 
   oButton.addEventListener("click", () => {
     selectedMarker = "O";
     console.log("SELECTED MARKER:", selectedMarker);
+    Game.initializeGame(selectedMarker);
   });
 
   return { renderGrid: grid };
@@ -182,15 +214,3 @@ document.addEventListener("DOMContentLoaded", () => {
   UI.renderGrid();
   // Start game or any other logic here
 });
-// EXPERIMENT
-/*
-Game.addMarker(0, 0); // Player 1 places an 'X'
-Game.addMarker(0, 1); // Player 2 places an 'O'
-Game.addMarker(0, 2); // Player 1 places an 'X'
-Game.addMarker(1, 0); // Player 2 places an 'O'
-Game.addMarker(1, 1); // Player 1 places an 'X'
-Game.addMarker(2, 0); // Player 2 places an 'O'
-Game.addMarker(1, 2); // Player 1 places an 'X'
-//Game.addMarker(2, 1); // Player 2 places an 'X'
-//Game.addMarker(2, 2); // Player 2 places an 'O'
-*/
