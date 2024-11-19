@@ -7,7 +7,6 @@ const Game = (function () {
   let player1 = null; // Will be assigned dynamically
   let player2 = null;
   let currentPlayer = null;
-
   // Initialize the game with the selected marker
   const initializeGame = (humanMarker) => {
     const computerMarker = humanMarker === "X" ? "O" : "X";
@@ -21,7 +20,7 @@ const Game = (function () {
         ? { name: "Human", marker: "X" }
         : { name: "Computer", marker: "O" };
 
-    // PLayer 1 always starts
+    // Player 1 always starts
     currentPlayer = player1;
 
     // Initialize the board with Cell objects
@@ -37,7 +36,7 @@ const Game = (function () {
     );
   };
 
-  // Expose getter methods for rows and columns
+  // Expose getter methods for rows and columns (to be used by code outside Game module)
   const getRows = () => rows;
   const getColumns = () => columns;
 
@@ -46,15 +45,15 @@ const Game = (function () {
     const cell = board[row][col];
     if (cell.getValue() === 0) {
       cell.addMarker(currentPlayer.marker);
-
       if (checkWinner()) {
+        UI.gameOver();
         console.log(`Winner is: ${currentPlayer.name}`);
       } else if (checkTie()) {
+        UI.gameOver();
         console.log(`No winner, tie game!`);
       } else {
         switchPlayer();
       }
-
       return true; // Marker added successfully
     }
     console.log("Cell is already occupied. Try a different move.");
@@ -65,6 +64,7 @@ const Game = (function () {
   const getCellValue = (row, col) => board[row][col].getValue();
 
   // Reset the board for a new game
+  // This only clears the logic, clear the UI in UI module
   const resetBoard = () => {
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < columns; j++) {
@@ -108,7 +108,6 @@ const Game = (function () {
         return true; // Winning combination found
       }
     }
-
     return false; // No winner yet
   };
 
@@ -129,12 +128,12 @@ const Game = (function () {
   };
 })();
 
-// Cell Factory Function
+// Cell Factory Function - encapsulated private function
 // Cell function should not interact with the DOM
-// It is encapsulated private function
 function Cell() {
   let value = 0;
 
+  // This function is responsible for writing a specific value to cell (X or O)
   const addMarker = (player) => {
     value = player;
   };
@@ -212,7 +211,30 @@ const UI = (function () {
     Game.initializeGame(selectedMarker);
   });
 
-  return { renderGrid: grid };
+  // Game over
+  const backdrop = document.querySelector(".outcome");
+
+  const gameOver = () => {
+    backdrop.style.display = "flex";
+  };
+
+  const playAgin = document.querySelector(".play-again");
+
+  playAgin.addEventListener("click", () => {
+    Game.resetBoard();
+    // Clear UI
+    clearAll();
+    backdrop.style.display = "none";
+  });
+
+  const clearAll = () => {
+    const allCells = document.querySelectorAll(".cell");
+    allCells.forEach((cell) => {
+      cell.textContent = "";
+    });
+  };
+
+  return { renderGrid: grid, gameOver };
 })();
 
 // DOMContentLoaded ensures the DOM is fully loaded before executing
