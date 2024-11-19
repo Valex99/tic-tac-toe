@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: monospace;
+  font-family: "Montserrat", "Roboto", sans-serif;
 }
 
 html {
@@ -36,12 +36,15 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  min-height: 720px;
 }
 
 .select-marker-div {
   width: 40%;
   /*background-color: aquamarine;*/
   min-width: 300px;
+  color: #4e4949;
 
   /* Manipulating visibility -> hidden - none */
   /*display: none;*/
@@ -50,7 +53,6 @@ html {
 .choose-marker-para {
   text-align: center;
   font-size: 20px;
-  font-weight: bold;
 }
 
 span {
@@ -70,14 +72,15 @@ span {
   border: none;
   margin-top: 25px;
   margin-bottom: 20px;
-  box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12),
-    0 3px 5px -1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 12px 20px 0 rgba(0, 0, 0, 0.2), 0 3px 25px 0 rgba(0, 0, 0, 0.15),
+    0 6px 10px -1px rgba(0, 0, 0, 0.3);
   transition: box-shadow 0.3s ease; /* Smooth transition */
 }
 
 .disclaimer {
   font-size: 15px;
   text-align: center;
+  margin-top: 15px;
 }
 
 .marker-button:hover {
@@ -114,6 +117,7 @@ span {
     0 6px 10px -1px rgba(0, 0, 0, 0.3);
 
   display: none;
+
 }
 
 /* Edit cell borders */
@@ -161,4 +165,53 @@ span {
 /**/
 .firstCell {
   color: black;
+}
+
+/* Game over */
+.outcome {
+  position: absolute;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.722);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 320px;
+  min-height: 720px;
+  min-width: 310px;
+
+  /* Dynamically switch this */
+  display: none;
+  /* Make game icon darker as well */
+}
+
+.outcome-text {
+  position: absolute;
+  color: white;
+  font-size: 30px;
+  margin-bottom: 120px;
+
+}
+
+.play-again {
+  background-color: #292929; /* Dark background color */
+  color: #fff; /* White text color */
+  border: none; /* Remove default border */
+  padding: 10px 20px; /* Add some padding */
+  text-transform: uppercase; /* Make text uppercase */
+  font-size: 16px; /* Adjust font size */
+  font-weight: bold; /* Make text bold */
+  cursor: pointer; /* Add pointer cursor on hover */
+  border-radius: 5px; /* Optional: Slightly rounded corners */
+  display: inline-block; /* Ensure it's inline-block */
+  text-align: center; /* Center-align text */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth hover effect */
+
+  /* Add event listeners to play again button to make outcome hidden again + clear board */
+}
+
+.play-again:hover {
+  background-color: #444; /* Slightly lighter on hover */
+  transform: scale(1.05); /* Slightly enlarge the button */
 }

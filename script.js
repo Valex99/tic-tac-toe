@@ -220,3 +220,5 @@ document.addEventListener("DOMContentLoaded", () => {
   UI.renderGrid();
   // Start game or any other logic here
 });
+
+// Go over code very slowly - understand in full what is it doing and try to apply computer's move
