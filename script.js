@@ -30,7 +30,6 @@ const Game = (function () {
         board[i][j] = Cell(); // Add a Cell object to each position
       }
     }
-
     console.log(
       `Game initialized. ${currentPlayer.name} (${currentPlayer.marker}) starts!`
     );
@@ -39,17 +38,17 @@ const Game = (function () {
   // Expose getter methods for rows and columns (to be used by code outside Game module)
   const getRows = () => rows;
   const getColumns = () => columns;
-
   // Function to add a marker to the board
   const addMarker = (row, col) => {
     const cell = board[row][col];
     if (cell.getValue() === 0) {
       cell.addMarker(currentPlayer.marker);
-      if (checkWinner()) {
-        UI.gameOver();
+      const winner = checkWinner();
+      if (winner) {
+        UI.gameOver(winner); // Pass the winner's name to the UI - as you call it, pass it an argument
         console.log(`Winner is: ${currentPlayer.name}`);
       } else if (checkTie()) {
-        UI.gameOver();
+        UI.gameOver("Tie");
         console.log(`No winner, tie game!`);
       } else {
         switchPlayer();
@@ -105,10 +104,10 @@ const Game = (function () {
         combination[0] === combination[2] &&
         combination[0] !== 0
       ) {
-        return true; // Winning combination found
+        return currentPlayer.name; // Winning combination found
       }
     }
-    return false; // No winner yet
+    return null; // No winner yet
   };
 
   // First version was nested for loop -> This is much cleaner
@@ -125,6 +124,7 @@ const Game = (function () {
     resetBoard,
     getRows,
     getColumns,
+    //getCurrentPlayer,
   };
 })();
 
@@ -213,9 +213,18 @@ const UI = (function () {
 
   // Game over
   const backdrop = document.querySelector(".outcome");
+  const outcomeText = document.querySelector(".outcome-text");
+  const logo = document.querySelector(".logo");
 
-  const gameOver = () => {
+  const gameOver = (winner) => {
     backdrop.style.display = "flex";
+    logo.style.filter = "invert(30%)";
+
+    if (winner === "Tie") {
+      outcomeText.textContent = "Tie Game! No winner...";
+    } else {
+      outcomeText.textContent = `${winner} wins!`;
+    }
   };
 
   const playAgin = document.querySelector(".play-again");
@@ -225,6 +234,7 @@ const UI = (function () {
     // Clear UI
     clearAll();
     backdrop.style.display = "none";
+    logo.style.filter = "invert(100%)";
   });
 
   const clearAll = () => {
