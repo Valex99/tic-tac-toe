@@ -37,6 +37,9 @@ html {
   align-items: center;
   justify-content: center;
 
+  /* This was added in case of any problem*/
+  flex-direction: column;
+
   min-height: 720px;
 }
 
@@ -112,13 +115,59 @@ span {
   display: grid;
   grid-template-columns: repeat(3, 100px);
   grid-template-rows: repeat(3, 100px);
-
   box-shadow: 0 12px 20px 0 rgba(0, 0, 0, 0.2), 0 3px 25px 0 rgba(0, 0, 0, 0.15),
     0 6px 10px -1px rgba(0, 0, 0, 0.3);
-
   display: none;
+}
+
+.PvP-div {
+  display: flex;
+  flex-direction: column;
+  height: 80px;
+  border-radius: 100px;
+  border: 2px solid #4e4949;
+  margin-top: 40px;
+  cursor: pointer;
+
+  /* Initially hidden */
+  display: none;
+}
+
+.PvC-div {
+  display: flex;
+  flex-direction: column;
+  height: 80px;
+  border-radius: 100px;
+  border: 2px solid #4e4949;
+  margin-top: 40px;
+  cursor: pointer;
+  /* Initially hidden */
+  display: none;
+}
+
+
+
+
+
+.player-player {
+  height: 75px;
+  filter: invert(30%);
+
+  /* You will probably have to use fill - not img but svg in html */
+}
+
+.game-mode-para {
+  margin-top: 10px;
+  font-weight: 600;
+  color: #4e4949;
+}
+
+.player-computer {
+  height: 75px;
+  filter: invert(30%);
 
 }
+
 
 /* Edit cell borders */
 .cell {
@@ -176,8 +225,8 @@ span {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: 320px;
-  min-height: 720px;
+  padding-bottom: 450px;
+  min-height: 790px;
   min-width: 310px;
 
   /* Dynamically switch this */

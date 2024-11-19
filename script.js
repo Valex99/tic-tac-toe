@@ -150,6 +150,10 @@ const UI = (function () {
   const markerButton = document.querySelectorAll(".marker-button");
   const chooseMarkerDiv = document.querySelector(".select-marker-div");
   const gameboardDiv = document.querySelector(".gameboard-div");
+  //
+  const playerPlayer = document.querySelector(".PvP-div");
+  const PlayerComputer = document.querySelector(".PvC-div");
+  //
 
   const grid = () => {
     // Pass rows and columns from Game module to UI module
@@ -190,7 +194,21 @@ const UI = (function () {
     element.addEventListener("click", () => {
       chooseMarkerDiv.style.display = "none";
       gameboardDiv.style.display = "grid";
+      playerPlayer.style.display = "flex";
     });
+  });
+
+  playerPlayer.addEventListener("click", () => {
+    PlayerComputer.style.display = "flex";
+    playerPlayer.style.display = "none";
+    // When this icon is clicked
+    // Clear board
+    // Switch game mode to PVP
+  });
+
+  PlayerComputer.addEventListener("click", () => {
+    PlayerComputer.style.display = "none";
+    playerPlayer.style.display = "flex";
   });
 
   // Which marker player selected
