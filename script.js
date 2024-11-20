@@ -10,11 +10,13 @@ const Game = (function () {
 
   let gameMode = "PvC"; // Default game mode is Player vs Computer
 
+  const getGameMode = () => gameMode;
+  const setGameMode = (mode) => {
+    gameMode = mode;
+  };
+
   // Initialize the game with the selected marker
   const initializeGame = (humanMarker) => {
-    //const computerMarker = humanMarker === "X" ? "O" : "X";
-    //console.log(computerMarker);
-
     if (gameMode === "PvC") {
       player1 =
         humanMarker === "X"
@@ -129,11 +131,6 @@ const Game = (function () {
   const switchPlayer = () => {
     currentPlayer = currentPlayer === player1 ? player2 : player1;
     console.log(`${currentPlayer.name} (${currentPlayer.marker})'s turn.`);
-
-    // If computer is on the move
-    if (currentPlayer.name === "Computer") {
-      console.log("YES");
-    }
   };
 
   // Check for a winner
@@ -178,7 +175,8 @@ const Game = (function () {
     resetBoard,
     getRows,
     getColumns,
-    //
+    getGameMode,
+    setGameMode,
   };
 })();
 
@@ -276,14 +274,28 @@ const UI = (function () {
   playerPlayer.addEventListener("click", () => {
     PlayerComputer.style.display = "flex";
     playerPlayer.style.display = "none";
-    // When this icon is clicked
-    // Clear board
-    // Switch game mode to PVP
+    // Switch game mode in Game module to "PvP"
+    Game.resetBoard();
+    clearAll();
+    Game.setGameMode("PvP");
+    Game.initializeGame();
   });
 
+  // When this icon is clicked Player vs Computer
+  // It should display select marker page again
   PlayerComputer.addEventListener("click", () => {
     PlayerComputer.style.display = "none";
     playerPlayer.style.display = "flex";
+    Game.resetBoard();
+    clearAll();
+    chooseMarkerDiv.style.display = "flex";
+    chooseMarkerDiv.style.flexDirection = "column";
+
+    gameboardDiv.style.display = "none";
+    playerPlayer.style.display = "none"
+
+    //Game.setGameMode("PvC");
+    //Game.initializeGame();
   });
 
   // Which marker player selected
@@ -344,3 +356,5 @@ document.addEventListener("DOMContentLoaded", () => {
 // Go over code very slowly - understand in full what is it doing and try to apply computer's move
 
 // When it's computer's turn -> disable eventlistener for human move
+
+// Last version
