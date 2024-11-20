@@ -36,11 +36,11 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 720px;
 
   /* This was added in case of any problem*/
   flex-direction: column;
-
-  min-height: 720px;
+  gap: 30px;
 }
 
 .select-marker-div {
@@ -123,50 +123,68 @@ span {
 .PvP-div {
   display: flex;
   flex-direction: column;
-  height: 80px;
-  border-radius: 100px;
-  border: 2px solid #4e4949;
-  margin-top: 40px;
-  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa; /* Soft background */
+  border: 2px solid #333; /* Matches board border */
+  border-radius: 12px; /* Rounded corners */
+  padding: 20px; /* Space around the content */
+  width: 120px; /* Adjust as necessary */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  transition: transform 0.2s, box-shadow 0.2s; /* Animations for hover effect */
+  cursor: pointer; /* Pointer cursor for interactivity */
 
-  /* Initially hidden */
   display: none;
+}
+
+.PvP-div:hover {
+  transform: scale(1.05); /* Slightly enlarge on hover */
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3); /* More pronounced shadow */
+}
+
+.player-player {
+  width: 50px; /* Adjust size */
+  height: 50px;
+  margin-bottom: 10px; /* Space between icon and text */
+  filter: invert(30%); /* Adjust icon colors to fit with the theme */
+}
+
+.game-mode-para {
+  font-size: 1rem; /* Adjust text size */
+  font-weight: 600; /* Slightly bold */
+  color: #333; /* Matches text color to board */
+  text-align: center;
+  margin: 0; /* Reset default margins */
 }
 
 .PvC-div {
   display: flex;
   flex-direction: column;
-  height: 80px;
-  border-radius: 100px;
-  border: 2px solid #4e4949;
-  margin-top: 40px;
-  cursor: pointer;
-  /* Initially hidden */
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa; /* Soft background */
+  border: 2px solid #333; /* Matches board border */
+  border-radius: 12px; /* Rounded corners */
+  padding: 20px; /* Space around the content */
+  width: 120px; /* Adjust as necessary */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  transition: transform 0.2s, box-shadow 0.2s; /* Animations for hover effect */
+  cursor: pointer; /* Pointer cursor for interactivity */
+
   display: none;
 }
 
-
-
-
-
-.player-player {
-  height: 75px;
-  filter: invert(30%);
-
-  /* You will probably have to use fill - not img but svg in html */
-}
-
-.game-mode-para {
-  margin-top: 10px;
-  font-weight: 600;
-  color: #4e4949;
+.PvC-div:hover {
+  transform: scale(1.05); /* Slightly enlarge on hover */
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3); /* More pronounced shadow */
 }
 
 .player-computer {
-  height: 75px;
-  filter: invert(30%);
+  width: 50px; /* Adjust size */
+  height: 50px;
+  margin-bottom: 10px; /* Space between icon and text */
+  filter: invert(30%); /* Adjust icon colors to fit with the theme */
 }
-
 
 /* Edit cell borders */
 .cell {
@@ -176,7 +194,6 @@ span {
   align-items: center;
   font-size: 60px;
   /* Added by chat gpt */
-  border: 1px solid silver;
   background-color: white;
   width: 100px;
   height: 100px;
@@ -229,7 +246,7 @@ span {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: 450px;
+  padding-bottom: 480px;
   min-height: 790px;
   min-width: 310px;
 
@@ -243,7 +260,6 @@ span {
   color: white;
   font-size: 30px;
   margin-bottom: 120px;
-
 }
 
 .play-again {
@@ -267,4 +283,10 @@ span {
 .play-again:hover {
   background-color: #444; /* Slightly lighter on hover */
   transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+/* During computer's turn */
+.disabled {
+  pointer-events: none; /* Prevent any mouse interactions */
+  opacity: 0.7; /* Optional: visually indicate it's disabled */
 }

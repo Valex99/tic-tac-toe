@@ -9,7 +9,6 @@ const Game = (function () {
   let currentPlayer = null;
 
   let gameMode = "PvC"; // Default game mode is Player vs Computer
-  //let isComputerTurn = false; // Flag to track computer's turn
 
   // Initialize the game with the selected marker
   const initializeGame = (humanMarker) => {
@@ -58,15 +57,15 @@ const Game = (function () {
   const getRows = () => rows;
   const getColumns = () => columns;
 
+  // It really is that simple - just add and remove class
   const triggerComputerMove = () => {
-    //isComputerTurn = true;
+    UI.disableGrid(); // Disable grid during computer's turn
     setTimeout(() => {
       let computerMarker = currentPlayer.marker;
       console.log(`Computer marker is: ${computerMarker}`);
-
       computerMove();
-      //isComputerTurn = false;
-    }, 1000); // 1 second delay
+      UI.enableGrid(); // Re-enable grid after computer's move
+    }, 800); // 0.7 second delay
     // This function should call UI to add computer marker
   };
 
@@ -130,6 +129,11 @@ const Game = (function () {
   const switchPlayer = () => {
     currentPlayer = currentPlayer === player1 ? player2 : player1;
     console.log(`${currentPlayer.name} (${currentPlayer.marker})'s turn.`);
+
+    // If computer is on the move
+    if (currentPlayer.name === "Computer") {
+      console.log("YES");
+    }
   };
 
   // Check for a winner
@@ -174,7 +178,7 @@ const Game = (function () {
     resetBoard,
     getRows,
     getColumns,
-    //getCurrentPlayer,
+    //
   };
 })();
 
@@ -221,7 +225,6 @@ const UI = (function () {
         cell.setAttribute("data-row", i);
         cell.setAttribute("data-col", j);
         gameboardDiv.appendChild(cell);
-
         // Add event listener to each cell
         // e.target is used to retrieve custom data attributes (data-row and data-col) from an HTML element that triggered an event.
         // e.target refers to the DOM element that triggered the event
@@ -242,6 +245,14 @@ const UI = (function () {
         });
       }
     }
+  };
+
+  const disableGrid = () => {
+    gameboardDiv.classList.add("disabled");
+  };
+
+  const enableGrid = () => {
+    gameboardDiv.classList.remove("disabled");
   };
 
   const updateCell = (row, col, marker) => {
@@ -321,7 +332,7 @@ const UI = (function () {
     });
   };
 
-  return { renderGrid: grid, gameOver, updateCell };
+  return { renderGrid: grid, gameOver, updateCell, disableGrid, enableGrid };
 })();
 
 // DOMContentLoaded ensures the DOM is fully loaded before executing
