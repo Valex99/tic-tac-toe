@@ -7,20 +7,35 @@ const Game = (function () {
   let player1 = null; // Will be assigned dynamically
   let player2 = null;
   let currentPlayer = null;
+
+  let gameMode = "PvC"; // Default game mode is Player vs Computer
+  //let isComputerTurn = false; // Flag to track computer's turn
+
   // Initialize the game with the selected marker
   const initializeGame = (humanMarker) => {
-    const computerMarker = humanMarker === "X" ? "O" : "X";
+    //const computerMarker = humanMarker === "X" ? "O" : "X";
+    //console.log(computerMarker);
 
-    player1 =
-      humanMarker === "X"
-        ? { name: "Human", marker: "X" }
-        : { name: "Computer", marker: "O" };
-    player2 =
-      humanMarker === "O"
-        ? { name: "Human", marker: "X" }
-        : { name: "Computer", marker: "O" };
+    if (gameMode === "PvC") {
+      player1 =
+        humanMarker === "X"
+          ? { name: "Human", marker: "X" }
+          : { name: "Computer", marker: "X" };
+      console.log(player1);
+
+      player2 =
+        humanMarker === "O"
+          ? { name: "Human", marker: "O" }
+          : { name: "Computer", marker: "O" };
+
+      console.log(player2);
+    } else if (gameMode === "PvP") {
+      player1 = { name: "Player1", marker: "X" };
+      player2 = { name: "Player2", marker: "O" };
+    }
 
     // Player 1 always starts
+    // Player 1 is always X (computer or human)
     currentPlayer = player1;
 
     // Initialize the board with Cell objects
@@ -33,16 +48,48 @@ const Game = (function () {
     console.log(
       `Game initialized. ${currentPlayer.name} (${currentPlayer.marker}) starts!`
     );
+    // After board has been initialized, check if it's computer's turn
+    if (currentPlayer.name === "Computer") {
+      triggerComputerMove();
+    }
   };
 
   // Expose getter methods for rows and columns (to be used by code outside Game module)
   const getRows = () => rows;
   const getColumns = () => columns;
+
+  const triggerComputerMove = () => {
+    //isComputerTurn = true;
+    setTimeout(() => {
+      let computerMarker = currentPlayer.marker;
+      console.log(`Computer marker is: ${computerMarker}`);
+
+      computerMove();
+      //isComputerTurn = false;
+    }, 1000); // 1 second delay
+    // This function should call UI to add computer marker
+  };
+
+  const computerMove = () => {
+    let row, col;
+    do {
+      row = Math.floor(Math.random() * rows);
+      col = Math.floor(Math.random() * columns);
+      // Call get value method ax X, Y to check if the cell is empty
+    } while (board[row][col].getValue() !== 0);
+
+    console.log(`Computer placed marker at ${row}, ${col}`);
+    addMarker(row, col);
+  };
+
   // Function to add a marker to the board
   const addMarker = (row, col) => {
     const cell = board[row][col];
     if (cell.getValue() === 0) {
       cell.addMarker(currentPlayer.marker);
+      // As soon as the marker is added -> notify UI about updated cell
+      UI.updateCell(row, col, currentPlayer.marker);
+
       const winner = checkWinner();
       if (winner) {
         UI.gameOver(winner); // Pass the winner's name to the UI - as you call it, pass it an argument
@@ -52,6 +99,9 @@ const Game = (function () {
         console.log(`No winner, tie game!`);
       } else {
         switchPlayer();
+        if (currentPlayer.name === "Computer") {
+          triggerComputerMove();
+        }
       }
       return true; // Marker added successfully
     }
@@ -153,7 +203,10 @@ const UI = (function () {
   //
   const playerPlayer = document.querySelector(".PvP-div");
   const PlayerComputer = document.querySelector(".PvC-div");
-  //
+  // Game over
+  const backdrop = document.querySelector(".outcome");
+  const outcomeText = document.querySelector(".outcome-text");
+  const logo = document.querySelector(".logo");
 
   const grid = () => {
     // Pass rows and columns from Game module to UI module
@@ -184,9 +237,20 @@ const UI = (function () {
           if (success) {
             const currentPlayerMarker = Game.getCellValue(row, col); // Place the marker
             e.target.textContent = currentPlayerMarker; // Update the cell's text
+            e.target.style.cursor = "not-allowed";
           }
         });
       }
+    }
+  };
+
+  const updateCell = (row, col, marker) => {
+    const cell = document.querySelector(
+      `.cell[data-row="${row}"][data-col="${col}"]`
+    );
+    if (cell) {
+      cell.textContent = marker; // Update the cell's text content
+      cell.style.cursor = "not-allowed";
     }
   };
 
@@ -229,11 +293,6 @@ const UI = (function () {
     Game.initializeGame(selectedMarker);
   });
 
-  // Game over
-  const backdrop = document.querySelector(".outcome");
-  const outcomeText = document.querySelector(".outcome-text");
-  const logo = document.querySelector(".logo");
-
   const gameOver = (winner) => {
     backdrop.style.display = "flex";
     logo.style.filter = "invert(30%)";
@@ -262,7 +321,7 @@ const UI = (function () {
     });
   };
 
-  return { renderGrid: grid, gameOver };
+  return { renderGrid: grid, gameOver, updateCell };
 })();
 
 // DOMContentLoaded ensures the DOM is fully loaded before executing
@@ -272,3 +331,5 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Go over code very slowly - understand in full what is it doing and try to apply computer's move
+
+// When it's computer's turn -> disable eventlistener for human move

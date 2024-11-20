@@ -165,7 +165,6 @@ span {
 .player-computer {
   height: 75px;
   filter: invert(30%);
-
 }
 
 
@@ -175,7 +174,12 @@ span {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 80px;
+  font-size: 60px;
+  /* Added by chat gpt */
+  border: 1px solid silver;
+  background-color: white;
+  width: 100px;
+  height: 100px;
 }
 
 /* Select specific cells for applying border */
