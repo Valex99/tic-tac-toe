@@ -288,14 +288,12 @@ const UI = (function () {
     playerPlayer.style.display = "flex";
     Game.resetBoard();
     clearAll();
+    Game.setGameMode("PvC");
     chooseMarkerDiv.style.display = "flex";
     chooseMarkerDiv.style.flexDirection = "column";
 
     gameboardDiv.style.display = "none";
-    playerPlayer.style.display = "none"
-
-    //Game.setGameMode("PvC");
-    //Game.initializeGame();
+    playerPlayer.style.display = "none";
   });
 
   // Which marker player selected
@@ -331,16 +329,18 @@ const UI = (function () {
 
   playAgin.addEventListener("click", () => {
     Game.resetBoard();
-    // Clear UI
     clearAll();
     backdrop.style.display = "none";
     logo.style.filter = "invert(100%)";
+    // Make cursor pointer again
+
   });
 
   const clearAll = () => {
     const allCells = document.querySelectorAll(".cell");
     allCells.forEach((cell) => {
       cell.textContent = "";
+      cell.style.cursor = "pointer"
     });
   };
 
@@ -353,8 +353,5 @@ document.addEventListener("DOMContentLoaded", () => {
   // Start game or any other logic here
 });
 
-// Go over code very slowly - understand in full what is it doing and try to apply computer's move
-
-// When it's computer's turn -> disable eventlistener for human move
-
-// Last version
+// TODO
+// Fix hover efect on gameboard cells - only taken cells should have not allowed cursor
